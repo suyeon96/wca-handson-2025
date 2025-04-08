@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO List</title>
+</head>
+<body>
+    <h1>Simple TODO List</h1>
+    <ul id="task-list"></ul>
+    <input type="text" id="task-input" placeholder="New Task">
+    <button onclick="addTask()">Add Task</button>
+
+    <script>
+        async function fetchTasks() {
+            let response = await fetch("/tasks");
+            let tasks = await response.json();
+            document.getElementById("task-list").innerHTML = tasks.map(task => `<li>${task.name}</li>`).join("");
+        }
+
+        async function addTask() {
+            let task = { name: document.getElementById("task-input").value };
+            await fetch("/tasks", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(task) });
+            fetchTasks();
+        }
+
+        fetchTasks();
+    </script>
+</body>
+</html>
